@@ -1,0 +1,19 @@
+name: check
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions: {}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Fail on branches named fail/*
+        env:
+          HEAD_REF: ${{ github.head_ref || github.ref_name }}
+        run: |
+          case "$HEAD_REF" in
+            fail/*) echo "forced failure for $HEAD_REF"; exit 1 ;;
+            *) echo "pass for $HEAD_REF" ;;
+          esac
